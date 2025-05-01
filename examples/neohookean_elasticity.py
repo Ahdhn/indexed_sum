@@ -157,9 +157,13 @@ def integrate():
 
         # min_x ½ dxᵀ H dx + gᵀ dx
         # subject to dx(fixed) = 0
-        dx = igl.min_quad_with_fixed(H,np_grad,fixed,bc)
+        Aeq = scipy.sparse.csc_matrix((0, H.shape[1]))
+        Beq = np.zeros((0, 1))
+        dx = igl.min_quad_with_fixed(H, np_grad, fixed, bc, Aeq, Beq, True)
+
+        #dx = igl.min_quad_with_fixed(H,np_grad,fixed,bc)
         # reshape dx like x
-        dx = torch.tensor(dx.reshape(x.shape[0],x.shape[1]),dtype=torch.float64)
+        dx = torch.tensor(dx[1].reshape(x.shape[0],x.shape[1]),dtype=torch.float64)
 
         x0 = x.clone().detach()
         ss,x_new,fx = backtracking_line_search(total_energy_func,x0,grad,dx,0.1,0.5,30)
