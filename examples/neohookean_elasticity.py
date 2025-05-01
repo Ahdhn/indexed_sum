@@ -76,7 +76,7 @@ F = torch.tensor(F,dtype=torch.int64)
 I = torch.arange(X.shape[0],dtype=torch.int64).unsqueeze(1)
 
 # per-vertex mass
-M = igl.massmatrix(X,F,igl.MASSMATRIX_TYPE_VORONOI).diagonal()
+M = igl.massmatrix(X.detach().numpy(),F.detach().numpy(),igl.MASSMATRIX_TYPE_VORONOI).diagonal()
 M = torch.tensor(M,dtype=torch.float64).unsqueeze(1)
 
 # initialize deformation to the rest state
